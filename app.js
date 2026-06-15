@@ -16,10 +16,6 @@ const CHEST_BEAST_ATTACK_INTERVAL = 80;
 const CHEST_BEAST_REWARD_DAY = 7;
 const CHEST_BEAST_TEST_MODE = true;
 const CHEST_BEAST_PLAYER_HP_MULTIPLIER = 7;
-const CHEST_BEAST_TEST_HP_RANGE = { min: 1800, max: 2600 };
-const CHEST_BEAST_TEST_ATTACK_RANGE = { min: 6, max: 14 };
-const CHEST_BEAST_TEST_PLAYER_HP = 9999;
-const CHEST_BEAST_TEST_PLAYER_ATTACK_RANGE = { min: 900, max: 1400 };
 const BATTLE_ITEM_SLOT_COUNT = 3;
 const TRADE_SELL_MIN_DAYS = 2;
 const TRADE_SELL_MAX_DAYS = 5;
@@ -3788,7 +3784,7 @@ function updateChestBeastPanel() {
   const monthKey = getChestRewardMonthKey();
   chestAchievementCount.textContent = `${unlockedCount} / ${achievements.length}`;
   chestHpRange.textContent = `${range.min.toLocaleString()}～${range.max.toLocaleString()}`;
-  chestMonthStatus.textContent = CHEST_BEAST_TEST_MODE ? "測試開放中，低難度" : isChestRewardDay() ? "本日可挑戰" : "非 7 日未開放";
+  chestMonthStatus.textContent = CHEST_BEAST_TEST_MODE ? "測試開放中，正式難度" : isChestRewardDay() ? "本日可挑戰" : "非 7 日未開放";
   joinChestCampaign.disabled = chestBeastBattle?.isRunning || (!CHEST_BEAST_TEST_MODE && (!isChestRewardDay() || lastChestRewardMonth === monthKey));
   joinChestCampaign.textContent = chestBeastBattle?.isRunning ? "戰役進行中" : "參加戰役";
 
@@ -3813,7 +3809,6 @@ function getUnlockedAchievementCount() {
 
 function getChestBeastHpRange() {
   const unlockedCount = getUnlockedAchievementCount();
-  if (CHEST_BEAST_TEST_MODE) return CHEST_BEAST_TEST_HP_RANGE;
   return unlockedCount <= 10 ? { min: 70000, max: 110000 } : { min: 135000, max: 210000 };
 }
 
@@ -3862,7 +3857,7 @@ function startChestBeastCampaign() {
   updateChestBeastPanel();
   battleLog.replaceChildren();
   applyChestBeastBattleTerrain();
-  addBattleLog(CHEST_BEAST_TEST_MODE ? "你進入 Daemon 魔狼測試戰役，這次已調成容易通關。" : "你進入 Daemon 魔狼戰役，牠的撕咬比一般魔王更強。");
+  addBattleLog(CHEST_BEAST_TEST_MODE ? "你進入 Daemon 魔狼測試戰役，目前使用正式難度。" : "你進入 Daemon 魔狼戰役，牠的撕咬比一般魔王更強。");
   addBattleLog(`戰役攻擊力為 ${battle.playerAttackRange.min.toLocaleString()}～${battle.playerAttackRange.max.toLocaleString()}。`);
   chestBeastDialog.close();
   battleDialog.showModal();
@@ -3872,31 +3867,27 @@ function startChestBeastCampaign() {
 function createChestBeastBoss(hpRange) {
   const level = getPlayerLevel();
   const achievementFactor = getUnlockedAchievementCount();
-  const hp = CHEST_BEAST_TEST_MODE ? randomInt(hpRange.min, hpRange.max) : randomInt(hpRange.min, hpRange.max) + level * 720 + achievementFactor * 520;
+  const hp = randomInt(hpRange.min, hpRange.max) + level * 720 + achievementFactor * 520;
   bossIdSequence += 1;
   return {
     id: `chest-wolf-${bossIdSequence}`,
     type: "chestWolf",
     hp,
     maxHp: hp,
-    attackRange: CHEST_BEAST_TEST_MODE
-      ? CHEST_BEAST_TEST_ATTACK_RANGE
-      : {
-          min: 280 + level * 14 + achievementFactor * 6,
-          max: 460 + level * 22 + achievementFactor * 10,
-        },
+    attackRange: {
+      min: 280 + level * 14 + achievementFactor * 6,
+      max: 460 + level * 22 + achievementFactor * 10,
+    },
     exp: 0,
     chestDropChance: 0,
   };
 }
 
 function getChestBeastPlayerMaxHp() {
-  if (CHEST_BEAST_TEST_MODE) return CHEST_BEAST_TEST_PLAYER_HP;
   return Math.round(getPlayerMaxHp() * CHEST_BEAST_PLAYER_HP_MULTIPLIER + getPlayerLevel() * 180 + getUnlockedAchievementCount() * 65);
 }
 
 function getChestBeastPlayerAttackRange() {
-  if (CHEST_BEAST_TEST_MODE) return CHEST_BEAST_TEST_PLAYER_ATTACK_RANGE;
   const attackRange = getPlayerAttackRange();
   return {
     min: Math.max(640, attackRange.min * 18),
