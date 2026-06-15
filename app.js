@@ -790,8 +790,29 @@ function ensureAccountGameData(account, username = "player", password = "", disp
   safeAccount.createdAt = Number(safeAccount.createdAt || Date.now());
   safeAccount.npcProfile = safeAccount.npcProfile || createNpcProfile(safeAccount.username);
   safeAccount.gameState = safeAccount.gameState || createNewGameState(safeAccount.npcProfile);
+  safeAccount.gameState = normalizeLoadedGameState(safeAccount.gameState);
   safeAccount.gameState.npcProfile = safeAccount.gameState.npcProfile || safeAccount.npcProfile;
   return safeAccount;
+}
+
+function normalizeLoadedGameState(state) {
+  if (!state) return state;
+  return {
+    ...state,
+    landFeatures: normalizeEntryList(state.landFeatures, "key", "featureType"),
+    itemInventory: normalizeEntryList(state.itemInventory, "name", "count"),
+  };
+}
+
+function normalizeEntryList(entries, keyName, valueName) {
+  if (!Array.isArray(entries)) return [];
+  return entries
+    .map((entry) => {
+      if (Array.isArray(entry)) return entry;
+      if (entry && typeof entry === "object") return [entry[keyName], entry[valueName]];
+      return null;
+    })
+    .filter((entry) => Array.isArray(entry) && entry[0] !== undefined && entry[1] !== undefined);
 }
 
 function getPlayerNickname() {
@@ -906,6 +927,14 @@ function serializeGameState() {
   };
 }
 
+function prepareGameStateForFirestore(state) {
+  return {
+    ...state,
+    landFeatures: (state.landFeatures || []).map(([key, featureType]) => ({ key, featureType })),
+    itemInventory: (state.itemInventory || []).map(([name, count]) => ({ name, count })),
+  };
+}
+
 function normalizeInventoryEntries(entries) {
   const normalized = new Map();
   entries.forEach(([name, count]) => {
@@ -990,6 +1019,7 @@ async function createFirebaseAuthProvider(firebaseConfig) {
     const { password, ...safeAccount } = account;
     return {
       ...safeAccount,
+      gameState: prepareGameStateForFirestore(safeAccount.gameState || {}),
       updatedAt: serverTimestamp(),
     };
   };
@@ -1017,9 +1047,14 @@ async function createFirebaseAuthProvider(firebaseConfig) {
         const credential = await signInWithEmailAndPassword(auth, usernameToEmail(username), password);
         return loadOrCreateAccount(credential.user, username, username === TEST_ACCOUNT_USERNAME ? "測試玩家" : username);
       } catch (error) {
-        if (username !== TEST_ACCOUNT_USERNAME) return null;
-        const credential = await createUserWithEmailAndPassword(auth, usernameToEmail(username), password);
-        return loadOrCreateAccount(credential.user, username, "測試玩家");
+        if (username !== TEST_ACCOUNT_USERNAME || error.code === "auth/wrong-password" || error.code === "auth/invalid-credential") return null;
+        try {
+          const credential = await createUserWithEmailAndPassword(auth, usernameToEmail(username), password);
+          return loadOrCreateAccount(credential.user, username, "測試玩家");
+        } catch (createError) {
+          console.warn("Unable to create Firebase test account.", createError);
+          return null;
+        }
       }
     },
     async register(username, password) {
