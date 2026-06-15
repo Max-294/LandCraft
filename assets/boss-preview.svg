@@ -1,0 +1,123 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="560" viewBox="0 0 1200 560" role="img" aria-labelledby="title desc">
+  <title id="title">Land Craft 魔王造型預覽</title>
+  <desc id="desc">綠色魔王、藍色魔王、紅色魔王、彩色魔王四種造型。</desc>
+  <defs>
+    <radialGradient id="bgGlow" cx="50%" cy="10%" r="70%">
+      <stop offset="0%" stop-color="#7b2f1d"/>
+      <stop offset="55%" stop-color="#1d1418"/>
+      <stop offset="100%" stop-color="#0c090d"/>
+    </radialGradient>
+    <linearGradient id="card" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0%" stop-color="#35232a"/>
+      <stop offset="100%" stop-color="#171015"/>
+    </linearGradient>
+    <linearGradient id="rainbowBoss" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0%" stop-color="#54e28d"/>
+      <stop offset="34%" stop-color="#58a6ff"/>
+      <stop offset="68%" stop-color="#ff73c5"/>
+      <stop offset="100%" stop-color="#ffd65b"/>
+    </linearGradient>
+    <filter id="softShadow" x="-40%" y="-40%" width="180%" height="180%">
+      <feDropShadow dx="0" dy="12" stdDeviation="12" flood-color="#000000" flood-opacity="0.45"/>
+    </filter>
+    <filter id="greenGlow" x="-70%" y="-70%" width="240%" height="240%">
+      <feDropShadow dx="0" dy="0" stdDeviation="12" flood-color="#45d66d" flood-opacity="0.8"/>
+    </filter>
+    <filter id="blueGlow" x="-70%" y="-70%" width="240%" height="240%">
+      <feDropShadow dx="0" dy="0" stdDeviation="12" flood-color="#4aa3ff" flood-opacity="0.8"/>
+    </filter>
+    <filter id="redGlow" x="-70%" y="-70%" width="240%" height="240%">
+      <feDropShadow dx="0" dy="0" stdDeviation="12" flood-color="#ff4f45" flood-opacity="0.8"/>
+    </filter>
+    <filter id="rainbowGlow" x="-70%" y="-70%" width="240%" height="240%">
+      <feDropShadow dx="0" dy="0" stdDeviation="12" flood-color="#ffd65b" flood-opacity="0.8"/>
+    </filter>
+  </defs>
+
+  <rect width="1200" height="560" fill="url(#bgGlow)"/>
+  <text x="600" y="56" text-anchor="middle" fill="#fff5dc" font-size="34" font-family="Arial, 'Noto Sans TC', sans-serif" font-weight="800">Land Craft 魔王造型預覽</text>
+  <text x="600" y="92" text-anchor="middle" fill="#d8b98c" font-size="18" font-family="Arial, 'Noto Sans TC', sans-serif">戰鬥畫面會依玩家土地數量出現不同魔王</text>
+
+  <g transform="translate(55 130)">
+    <rect width="250" height="350" rx="14" fill="url(#card)" stroke="rgba(255,205,132,0.28)" filter="url(#softShadow)"/>
+    <g transform="translate(125 142)" filter="url(#greenGlow)">
+      <path d="M-54 -78 L-20 -24 L-70 -26 Z" fill="#ffe7a3"/>
+      <path d="M54 -78 L20 -24 L70 -26 Z" fill="#ffe7a3"/>
+      <ellipse cx="0" cy="-4" rx="72" ry="58" fill="#45d66d"/>
+      <path d="M-50 -32 C-20 -64 36 -62 58 -22 C40 -50 -14 -50 -50 -32 Z" fill="#ffffff" opacity="0.22"/>
+      <path d="M-48 50 C-20 18 26 18 54 50 C45 84 -39 84 -48 50 Z" fill="#3ac160"/>
+      <path d="M-88 24 C-112 38 -104 74 -68 66 C-78 52 -72 34 -88 24 Z" fill="#45d66d"/>
+      <path d="M88 24 C112 38 104 74 68 66 C78 52 72 34 88 24 Z" fill="#45d66d"/>
+      <ellipse cx="-25" cy="-6" rx="10" ry="15" fill="#fff7df"/>
+      <ellipse cx="25" cy="-6" rx="10" ry="15" fill="#fff7df"/>
+      <ellipse cx="-21" cy="-4" rx="4" ry="7" fill="#101010"/>
+      <ellipse cx="29" cy="-4" rx="4" ry="7" fill="#101010"/>
+      <path d="M-15 28 Q0 39 15 28" fill="none" stroke="#2a1517" stroke-width="5" stroke-linecap="round"/>
+    </g>
+    <text x="125" y="266" text-anchor="middle" fill="#fff5dc" font-size="24" font-family="Arial, 'Noto Sans TC', sans-serif" font-weight="800">綠色魔王</text>
+    <text x="125" y="300" text-anchor="middle" fill="#d8b98c" font-size="16" font-family="Arial, 'Noto Sans TC', sans-serif">初期登場，地底小魔王</text>
+  </g>
+
+  <g transform="translate(335 130)">
+    <rect width="250" height="350" rx="14" fill="url(#card)" stroke="rgba(255,205,132,0.28)" filter="url(#softShadow)"/>
+    <g transform="translate(125 142)" filter="url(#blueGlow)">
+      <path d="M-50 -82 L-20 -22 L-62 -8 L-78 -40 Z" fill="#bfeeff"/>
+      <path d="M50 -82 L20 -22 L62 -8 L78 -40 Z" fill="#bfeeff"/>
+      <path d="M-70 -24 C-48 -72 46 -72 70 -24 C82 22 48 58 0 62 C-48 58 -82 22 -70 -24 Z" fill="#4aa3ff"/>
+      <path d="M-50 48 C-28 18 28 18 50 48 L38 92 L-38 92 Z" fill="#378adf"/>
+      <path d="M-84 18 C-118 30 -112 70 -70 64 C-82 48 -76 30 -84 18 Z" fill="#4aa3ff"/>
+      <path d="M84 18 C118 30 112 70 70 64 C82 48 76 30 84 18 Z" fill="#4aa3ff"/>
+      <ellipse cx="-25" cy="-4" rx="10" ry="16" fill="#dff6ff"/>
+      <ellipse cx="25" cy="-4" rx="10" ry="16" fill="#dff6ff"/>
+      <ellipse cx="-21" cy="-2" rx="4" ry="7" fill="#07151f"/>
+      <ellipse cx="29" cy="-2" rx="4" ry="7" fill="#07151f"/>
+      <path d="M-18 29 Q0 20 18 29" fill="none" stroke="#15304b" stroke-width="5" stroke-linecap="round"/>
+      <path d="M-34 -36 L-12 -48 M34 -36 L12 -48" stroke="#dff6ff" stroke-width="5" stroke-linecap="round"/>
+    </g>
+    <text x="125" y="266" text-anchor="middle" fill="#fff5dc" font-size="24" font-family="Arial, 'Noto Sans TC', sans-serif" font-weight="800">藍色魔王</text>
+    <text x="125" y="300" text-anchor="middle" fill="#d8b98c" font-size="16" font-family="Arial, 'Noto Sans TC', sans-serif">中期登場，冰晶角造型</text>
+  </g>
+
+  <g transform="translate(615 130)">
+    <rect width="250" height="350" rx="14" fill="url(#card)" stroke="rgba(255,205,132,0.28)" filter="url(#softShadow)"/>
+    <g transform="translate(125 142)" filter="url(#redGlow)">
+      <path d="M-62 -92 L-22 -24 L-86 -18 Z" fill="#ffcf8a"/>
+      <path d="M62 -92 L22 -24 L86 -18 Z" fill="#ffcf8a"/>
+      <path d="M-78 -20 C-54 -78 54 -78 78 -20 C88 34 50 64 0 68 C-50 64 -88 34 -78 -20 Z" fill="#ff4f45"/>
+      <path d="M-60 50 C-32 14 32 14 60 50 L46 98 L-46 98 Z" fill="#d93631"/>
+      <path d="M-96 16 C-130 28 -124 74 -76 66 C-92 48 -86 28 -96 16 Z" fill="#ff4f45"/>
+      <path d="M96 16 C130 28 124 74 76 66 C92 48 86 28 96 16 Z" fill="#ff4f45"/>
+      <ellipse cx="-28" cy="-6" rx="12" ry="17" fill="#ffe9a3"/>
+      <ellipse cx="28" cy="-6" rx="12" ry="17" fill="#ffe9a3"/>
+      <ellipse cx="-23" cy="-4" rx="5" ry="8" fill="#140608"/>
+      <ellipse cx="33" cy="-4" rx="5" ry="8" fill="#140608"/>
+      <path d="M-25 31 Q0 47 25 31" fill="none" stroke="#140608" stroke-width="6" stroke-linecap="round"/>
+      <path d="M-45 -36 L-18 -48 M45 -36 L18 -48" stroke="#2b0708" stroke-width="6" stroke-linecap="round"/>
+    </g>
+    <text x="125" y="266" text-anchor="middle" fill="#fff5dc" font-size="24" font-family="Arial, 'Noto Sans TC', sans-serif" font-weight="800">紅色魔王</text>
+    <text x="125" y="300" text-anchor="middle" fill="#d8b98c" font-size="16" font-family="Arial, 'Noto Sans TC', sans-serif">後期登場，更壯、更兇</text>
+  </g>
+
+  <g transform="translate(895 130)">
+    <rect width="250" height="350" rx="14" fill="url(#card)" stroke="rgba(255,205,132,0.28)" filter="url(#softShadow)"/>
+    <g transform="translate(125 142)" filter="url(#rainbowGlow)">
+      <path d="M-58 -88 L-23 -22 L-72 -14 Z" fill="url(#rainbowBoss)"/>
+      <path d="M58 -88 L23 -22 L72 -14 Z" fill="url(#rainbowBoss)"/>
+      <path d="M-54 -76 L-38 -36 L-20 -72 L0 -28 L20 -72 L38 -36 L54 -76 L42 -18 L-42 -18 Z" fill="#ffd65b"/>
+      <path d="M-74 -18 C-52 -72 52 -72 74 -18 C86 30 48 62 0 66 C-48 62 -86 30 -74 -18 Z" fill="url(#rainbowBoss)"/>
+      <path d="M-58 50 C-30 16 30 16 58 50 L42 96 L-42 96 Z" fill="url(#rainbowBoss)"/>
+      <path d="M-90 20 C-124 34 -116 72 -74 66 C-86 48 -80 32 -90 20 Z" fill="url(#rainbowBoss)"/>
+      <path d="M90 20 C124 34 116 72 74 66 C86 48 80 32 90 20 Z" fill="url(#rainbowBoss)"/>
+      <ellipse cx="-26" cy="-4" rx="10" ry="16" fill="#fff7df"/>
+      <ellipse cx="26" cy="-4" rx="10" ry="16" fill="#fff7df"/>
+      <ellipse cx="-22" cy="-2" rx="4" ry="7" fill="#171017"/>
+      <ellipse cx="30" cy="-2" rx="4" ry="7" fill="#171017"/>
+      <path d="M-18 30 Q0 41 18 30" fill="none" stroke="#2a1517" stroke-width="5" stroke-linecap="round"/>
+      <circle cx="-52" cy="-48" r="5" fill="#fff7df"/>
+      <circle cx="0" cy="-53" r="5" fill="#fff7df"/>
+      <circle cx="52" cy="-48" r="5" fill="#fff7df"/>
+    </g>
+    <text x="125" y="266" text-anchor="middle" fill="#fff5dc" font-size="24" font-family="Arial, 'Noto Sans TC', sans-serif" font-weight="800">彩色魔王</text>
+    <text x="125" y="300" text-anchor="middle" fill="#d8b98c" font-size="16" font-family="Arial, 'Noto Sans TC', sans-serif">特殊魔王，皇冠彩晶造型</text>
+  </g>
+</svg>
