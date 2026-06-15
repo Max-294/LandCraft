@@ -1,0 +1,419 @@
+<!doctype html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Land Craft</title>
+    <link rel="stylesheet" href="styles.css?v=firebase-sync-1" />
+  </head>
+  <body>
+    <section id="auth-screen" class="auth-screen" aria-label="登入 Land Craft">
+      <form id="auth-form" class="auth-card">
+        <p class="auth-kicker">Land Craft 帳號</p>
+        <h2>登入地底世界</h2>
+        <p class="auth-copy">未設定 Firebase 時會使用本機儲存；填入 Firebase 設定後會改為雲端同步。</p>
+        <label>
+          帳號
+          <input id="auth-username" type="text" autocomplete="username" placeholder="輸入帳號" required />
+        </label>
+        <label>
+          密碼
+          <input id="auth-password" type="password" autocomplete="current-password" placeholder="輸入密碼" required />
+        </label>
+        <div class="auth-actions">
+          <button id="auth-login" type="submit">登入</button>
+          <button id="auth-register" type="button">新增帳號</button>
+        </div>
+        <button id="auth-test-login" class="auth-test-login" type="button">使用測試帳號</button>
+        <p id="auth-message" class="auth-message" aria-live="polite">測試帳號：test / test123</p>
+      </form>
+    </section>
+
+    <section id="intro-cinematic" class="intro-cinematic hidden" aria-label="Land Craft 入場動畫" aria-hidden="true">
+      <div class="intro-cinematic-bg" aria-hidden="true"></div>
+      <div class="intro-particles" aria-hidden="true">
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+      <div class="intro-title-card">
+        <span class="intro-crest" aria-hidden="true"></span>
+        <h1>Land Craft</h1>
+        <p>地底王國已開啟</p>
+      </div>
+    </section>
+
+    <section id="jade-cup-ad" class="jade-cup-ad hidden" aria-label="玉石盃電競賽事廣告" aria-hidden="true">
+      <div class="jade-cup-panel">
+        <button id="jade-cup-close" class="jade-cup-close" type="button" aria-label="關閉玉石盃廣告">×</button>
+        <div class="jade-cup-header">
+          <strong>電競賽事：玉石盃</strong>
+          <span>熱烈進行中</span>
+        </div>
+        <div class="jade-cup-title">
+          <h2>Jade Cup</h2>
+          <p>每年 1～10 月開放挑戰，地底競技場正在選出最耀眼的玩家。</p>
+        </div>
+        <div id="jade-cup-rewards" class="jade-cup-rewards"></div>
+      </div>
+    </section>
+
+    <main class="app-shell">
+      <header class="top-bar">
+        <div>
+          <h1>Land Craft</h1>
+          <p>地底世界地圖：1000 x 1000 格</p>
+        </div>
+        <section class="hud" aria-label="遊戲資訊">
+          <div>
+            <span>玩家土地</span>
+            <strong id="player-count">1</strong>
+          </div>
+          <div>
+            <span>NPC 土地</span>
+            <strong id="npc-count">16</strong>
+          </div>
+          <div>
+            <span>金錢</span>
+            <strong id="money-count">$0</strong>
+          </div>
+          <div>
+            <span>生命值</span>
+            <strong id="hp-count">150</strong>
+          </div>
+          <div>
+            <span>縮放</span>
+            <strong id="zoom-label">100%</strong>
+          </div>
+        </section>
+        <section class="account-panel" aria-label="帳號資訊">
+          <span id="current-account-label">未登入</span>
+          <button id="logout-button" type="button">登出</button>
+        </section>
+        <section class="audio-panel" aria-label="音訊控制">
+          <button id="music-toggle" class="audio-toggle active" type="button" aria-pressed="true">音樂 ON</button>
+          <button id="sfx-toggle" class="audio-toggle active" type="button" aria-pressed="true">音效 ON</button>
+        </section>
+      </header>
+
+      <section class="toolbar" aria-label="地圖控制">
+        <button id="zoom-out" type="button" aria-label="縮小">－</button>
+        <input
+          id="zoom-range"
+          type="range"
+          min="40"
+          max="220"
+          value="100"
+          step="10"
+          aria-label="縮放比例"
+        />
+        <button id="zoom-in" type="button" aria-label="放大">＋</button>
+        <button id="center-player" type="button">回到玩家土地</button>
+        <p id="status-text">點選綠色領地旁的土地來挑戰魔王。</p>
+      </section>
+
+      <nav class="quick-menu open" aria-label="左側功能選單">
+        <div class="quick-menu-header">
+          <span>功能選單</span>
+          <button
+            id="quick-menu-toggle"
+            class="quick-menu-toggle"
+            type="button"
+            aria-label="收合左側功能選單"
+            aria-expanded="true"
+          >
+            <span class="quick-menu-core" aria-hidden="true"></span>
+          </button>
+        </div>
+        <div id="quick-menu-items" class="quick-menu-items" aria-hidden="false">
+          <button class="quick-menu-item bag-menu-item" type="button" data-panel="bag">
+            <span class="item-icon bag-icon" aria-hidden="true"></span>
+            <span>背包</span>
+          </button>
+          <button class="quick-menu-item achievement-menu-item" type="button" data-panel="achievements">
+            <span class="item-icon trophy-icon" aria-hidden="true"></span>
+            <span>成就</span>
+          </button>
+          <button class="quick-menu-item character-menu-item" type="button" data-panel="character">
+            <span class="item-icon character-icon" aria-hidden="true"></span>
+            <span>人物介面</span>
+          </button>
+          <button class="quick-menu-item daily-menu-item" type="button" data-panel="daily">
+            <span class="item-icon daily-gift-icon" aria-hidden="true"></span>
+            <span>每日獎勵</span>
+          </button>
+          <button class="quick-menu-item beast-menu-item" id="chest-beast-button" type="button" data-action="chest" aria-label="進入寶箱魔獸">
+            <span class="item-icon chest-beast-icon" aria-hidden="true"></span>
+            <span>寶箱魔獸</span>
+          </button>
+          <button class="quick-menu-item trade-menu-item" id="trade-button" type="button" data-action="trade" aria-label="進入交易之場">
+            <span class="item-icon trade-scale-icon" aria-hidden="true"></span>
+            <span>交易之場</span>
+          </button>
+        </div>
+      </nav>
+
+      <section class="play-area">
+        <section class="map-frame" aria-label="Land Craft 世界地圖">
+          <div id="map-viewport" class="map-viewport" tabindex="0">
+            <canvas id="world-canvas" aria-label="1000 乘 1000 格地底世界"></canvas>
+            <div id="world-size" class="world-size"></div>
+          </div>
+        </section>
+
+        <aside class="side-panel" aria-label="遊戲進度">
+          <section>
+            <h2>成就</h2>
+            <ul id="achievement-list"></ul>
+          </section>
+          <section>
+            <h2>目前規則</h2>
+            <p id="event-label">年度活動檢查中</p>
+            <p>佔領一般土地或 NPC 土地都要先打敗魔王。</p>
+            <p>按下開始攻擊後，你的角色會自動揮動水晶鎬直到勝利或戰敗。</p>
+            <p>魔王會依玩家等級與種類提升難度，玩家每次勝利會獲得 EXP，且每 5 級會有明顯能力提升。</p>
+          </section>
+        </aside>
+      </section>
+    </main>
+
+    <dialog id="confirm-dialog" class="game-dialog">
+      <form method="dialog">
+        <h2>挑戰這塊土地？</h2>
+        <p id="target-info">這塊土地旁邊有你的領地，可以進入戰場。</p>
+        <menu>
+          <button value="cancel">取消</button>
+          <button id="confirm-battle" value="confirm">確認</button>
+        </menu>
+      </form>
+    </dialog>
+
+    <dialog id="battle-dialog" class="battle-dialog">
+      <section class="battle-scene">
+        <div class="battle-header">
+          <div>
+            <h2 id="battle-title">岩漿戰場</h2>
+            <p id="battle-subtitle">打敗所有魔王就能獲得土地。</p>
+          </div>
+          <button id="escape-battle" type="button">離開</button>
+        </div>
+        <div class="battle-stats">
+          <div>
+            <span>玩家生命</span>
+            <strong id="battle-player-hp">150</strong>
+          </div>
+          <div>
+            <span>玩家攻擊</span>
+            <strong id="battle-player-attack">30</strong>
+          </div>
+          <div>
+            <span>回合</span>
+            <strong id="battle-turn">0</strong>
+          </div>
+        </div>
+        <div class="battle-field">
+          <div id="boss-field-hud" class="battle-field-hud boss-field-hud" aria-label="魔王血量"></div>
+          <article class="hero-card" aria-label="玩家角色">
+            <div id="hero-avatar" class="hero-avatar">
+              <span class="hero-cape"></span>
+              <span class="hero-head">
+                <span class="hero-eye left"></span>
+                <span class="hero-eye right"></span>
+              </span>
+              <span class="hero-helmet"></span>
+              <span class="hero-body"></span>
+              <span class="hero-pickaxe"></span>
+              <span id="attack-slash" class="attack-slash"></span>
+            </div>
+          </article>
+          <div id="boss-list" class="boss-list"></div>
+          <div class="battle-field-hud hero-field-hud" aria-label="玩家血量">
+            <div>
+              <strong>地底開拓者</strong>
+              <span id="hero-field-hp">150 / 150</span>
+            </div>
+            <div class="field-hp-bar hero-field-hp-bar"><span id="hero-field-hp-bar"></span></div>
+          </div>
+          <div id="damage-float-layer" class="damage-float-layer" aria-hidden="true"></div>
+          <div id="boss-attack-effect" class="boss-attack-effect" aria-hidden="true">
+            <span></span>
+            <strong>致命一擊</strong>
+          </div>
+        </div>
+        <div class="battle-actions">
+          <section id="battle-item-panel" class="battle-item-panel hidden" aria-label="魔狼戰役道具">
+            <div class="battle-item-header">
+              <div>
+                <strong>戰役道具</strong>
+                <span>選擇最多 3 個背包道具，暫停後可使用。</span>
+              </div>
+              <button id="pause-battle-button" type="button">暫停攻擊</button>
+            </div>
+            <div id="battle-item-slots" class="battle-item-slots"></div>
+            <div class="battle-item-picker">
+              <select id="battle-item-select" aria-label="選擇背包道具"></select>
+              <button id="assign-battle-item" type="button">放入空格</button>
+            </div>
+            <p id="battle-item-message" class="battle-item-message" aria-live="polite">魔狼戰役開始後，可暫停自動攻擊來使用道具。</p>
+          </section>
+          <button id="attack-button" type="button">開始攻擊</button>
+        </div>
+        <ol id="battle-log" class="battle-log"></ol>
+      </section>
+    </dialog>
+
+    <dialog id="victory-dialog" class="game-dialog">
+      <form method="dialog">
+        <h2>戰鬥勝利</h2>
+        <p id="victory-message">你打敗魔王並佔領土地。</p>
+        <menu>
+          <button value="close">繼續探索</button>
+        </menu>
+      </form>
+    </dialog>
+
+    <dialog id="defeat-dialog" class="game-dialog">
+      <form method="dialog">
+        <h2>戰鬥失敗</h2>
+        <p id="defeat-message">你已被魔王擊敗，沒辦法佔領土地。</p>
+        <menu>
+          <button value="close">繼續探索</button>
+        </menu>
+      </form>
+    </dialog>
+
+    <dialog id="achievement-dialog" class="achievement-dialog">
+      <section id="achievement-card" class="achievement-card">
+        <p class="achievement-kicker">成就達成</p>
+        <div id="achievement-icon" class="achievement-icon">★</div>
+        <h2 id="achievement-title">新的成就</h2>
+        <p id="achievement-message" class="achievement-message">你完成了一項挑戰。</p>
+        <p id="achievement-reward" class="achievement-reward">繼續擴張你的地底領土。</p>
+        <button id="achievement-close" type="button">繼續遊戲</button>
+      </section>
+    </dialog>
+
+    <dialog id="feature-dialog" class="feature-dialog">
+      <section>
+        <div class="feature-dialog-header">
+          <div>
+            <p id="feature-kicker">快速功能</p>
+            <h2 id="feature-title">背包</h2>
+          </div>
+          <button id="feature-close" type="button" aria-label="關閉">關閉</button>
+        </div>
+        <div id="feature-content" class="feature-content"></div>
+      </section>
+    </dialog>
+
+    <dialog id="chest-beast-dialog" class="chest-beast-dialog">
+      <section class="chest-beast-panel">
+        <div class="feature-dialog-header">
+          <div>
+            <p id="chest-beast-kicker">每月 7 日更新獎勵</p>
+            <h2>寶箱魔獸</h2>
+          </div>
+          <button id="chest-beast-close" type="button" aria-label="關閉">關閉</button>
+        </div>
+
+        <div class="chest-beast-summary">
+          <article>
+            <span>成就完成數</span>
+            <strong id="chest-achievement-count">0</strong>
+          </article>
+          <article>
+            <span>魔獸血量區間</span>
+            <strong id="chest-hp-range">30,000～50,000</strong>
+          </article>
+          <article>
+            <span>本月狀態</span>
+            <strong id="chest-month-status">可挑戰</strong>
+          </article>
+        </div>
+
+        <div class="chest-beast-stage">
+          <div class="chest-monster" aria-hidden="true">
+            <span class="chest-monster-lid"></span>
+            <span class="chest-monster-eye left"></span>
+            <span class="chest-monster-eye right"></span>
+            <span class="chest-monster-vine vine-a"></span>
+            <span class="chest-monster-vine vine-b"></span>
+          </div>
+          <div class="chest-beast-info">
+            <h3>Daemon 魔狼</h3>
+            <p>擊敗這隻守護寶箱的魔狼後，會獲得神獸寶箱、晶鑽寶箱、鐵門寶箱或魔法寶箱其中之一。牠比一般魔王強，但難度已調整得更適合測試。</p>
+            <div class="chest-hp-bar">
+              <span id="chest-beast-hp-bar"></span>
+            </div>
+            <p id="chest-beast-hp-label">尚未開始戰役</p>
+          </div>
+        </div>
+
+        <div class="chest-beast-actions">
+          <button id="join-chest-campaign" type="button">參加戰役</button>
+        </div>
+
+        <section class="chest-reward-panel">
+          <h3>可能獎勵</h3>
+          <div class="chest-reward-grid">
+            <span><i class="inventory-icon beast-chest" aria-hidden="true"></i>神獸寶箱</span>
+            <span><i class="inventory-icon crystal-chest" aria-hidden="true"></i>晶鑽寶箱</span>
+            <span><i class="inventory-icon iron-chest" aria-hidden="true"></i>鐵門寶箱</span>
+            <span><i class="inventory-icon magic-chest" aria-hidden="true"></i>魔法寶箱</span>
+          </div>
+        </section>
+
+        <ol id="chest-beast-log" class="battle-log chest-beast-log"></ol>
+      </section>
+    </dialog>
+
+    <dialog id="trade-dialog" class="trade-dialog">
+      <section class="trade-panel">
+        <div class="feature-dialog-header">
+          <div>
+            <p id="trade-kicker">買賣商品</p>
+            <h2>交易之場</h2>
+          </div>
+          <button id="trade-close" type="button" aria-label="關閉">關閉</button>
+        </div>
+
+        <div class="trade-wallet">
+          <span>目前金錢</span>
+          <strong id="trade-money">$0</strong>
+        </div>
+
+        <section>
+          <h3>可購買商品</h3>
+          <p>每次進入會刷新 3 項遊戲道具與 3 張地形卡；遊戲道具價格為 $300～$1,500，地形卡依稀有度定價。</p>
+          <div id="trade-product-grid" class="trade-product-grid"></div>
+        </section>
+
+        <section class="trade-sell-panel">
+          <h3>上架商品</h3>
+          <p>交易之場會用固定價格立即收購：遊戲道具 $300，地形卡依稀有度為 $1,000 / $5,000 / $10,000 / $50,000。</p>
+          <div class="trade-sell-form">
+            <label>
+              選擇背包道具
+              <select id="trade-sell-name"></select>
+            </label>
+            <button id="trade-list-button" type="button">上架</button>
+          </div>
+        </section>
+
+        <section>
+          <h3>尚未結算的舊上架商品</h3>
+          <div id="trade-listings" class="trade-listings"></div>
+        </section>
+
+        <ol id="trade-log" class="battle-log trade-log"></ol>
+      </section>
+    </dialog>
+
+    <script src="app.js?v=firebase-sync-1"></script>
+  </body>
+</html>
