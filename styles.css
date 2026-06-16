@@ -6505,3 +6505,147 @@ p {
     transform: translateX(52px) translateY(58px) rotate(74deg) scale(0.82);
   }
 }
+
+@media (max-width: 720px) {
+  html,
+  body {
+    min-height: 100%;
+    overflow: auto;
+  }
+
+  .app-shell {
+    min-height: 100svh;
+    height: auto;
+    padding: 8px;
+    grid-template-rows: auto auto auto;
+    gap: 8px;
+  }
+
+  .top-bar {
+    min-height: auto;
+    padding: 10px;
+    display: grid;
+    gap: 10px;
+  }
+
+  .top-bar > div:first-child {
+    min-width: 0;
+  }
+
+  .top-bar h1 {
+    font-size: 1.35rem;
+  }
+
+  .top-bar p {
+    font-size: 0.78rem;
+  }
+
+  .hud {
+    width: 100%;
+    display: flex;
+    gap: 8px;
+    overflow-x: auto;
+    padding-bottom: 2px;
+    scroll-snap-type: x proximity;
+  }
+
+  .hud div {
+    flex: 0 0 112px;
+    min-width: 112px;
+    padding: 8px 9px;
+    scroll-snap-align: start;
+  }
+
+  .hud strong {
+    font-size: 1rem;
+  }
+
+  .account-panel,
+  .audio-panel {
+    width: 100%;
+    min-width: 0;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .toolbar {
+    padding: 8px;
+    gap: 7px;
+    flex-wrap: wrap;
+  }
+
+  .toolbar button {
+    min-width: 38px;
+    min-height: 34px;
+  }
+
+  #zoom-range {
+    flex: 1 1 140px;
+    width: auto;
+    min-width: 120px;
+  }
+
+  .toolbar p {
+    flex: 1 0 100%;
+    font-size: 0.78rem;
+  }
+
+  .play-area {
+    min-height: auto;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 8px;
+  }
+
+  .map-frame {
+    height: min(68svh, 560px);
+    min-height: 420px;
+  }
+
+  .map-viewport {
+    min-height: 0;
+    height: 100%;
+    overscroll-behavior: contain;
+  }
+
+  .side-panel {
+    max-height: none;
+    min-height: 0;
+    padding: 10px;
+  }
+
+  .quick-menu {
+    top: auto;
+    bottom: 10px;
+    left: 8px;
+    width: 64px;
+    max-height: calc(100svh - 20px);
+    overflow-y: auto;
+    border-right: 0;
+    border: 1px solid rgba(255, 159, 69, 0.32);
+    border-radius: 0 12px 12px 0;
+  }
+
+  .quick-menu.open {
+    width: 142px;
+  }
+
+  .quick-menu-header {
+    min-height: 46px;
+  }
+
+  .quick-menu-toggle {
+    width: 48px;
+    height: 48px;
+  }
+
+  .quick-menu-item {
+    min-height: 52px;
+    padding-left: 48px;
+    font-size: 0.76rem;
+  }
+
+  .item-icon {
+    width: 44px;
+    height: 44px;
+  }
+}

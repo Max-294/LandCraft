@@ -428,6 +428,8 @@ let authProvider = createLocalAuthProvider();
 let authProviderReady = null;
 let npcGrowthTimer = null;
 let autosaveTimer = null;
+let cloudSyncUnsubscribe = null;
+let isApplyingRemoteState = false;
 let introCinematicTimer = null;
 let jadeCupAdTimer = null;
 let audioContext = null;
@@ -744,6 +746,7 @@ function initGame(account) {
   if (npcGrowthTimer) clearInterval(npcGrowthTimer);
   npcGrowthTimer = setInterval(tickNpcGrowth, 30 * 1000);
   startAutosaveTimer();
+  startCloudSync();
   document.body.classList.remove("auth-locked");
   authScreen.classList.add("hidden");
   statusText.textContent = `登入成功：${getPlayerNickname()}，你的對應 NPC「${currentNpcProfile.name}」已在地底世界中。`;
@@ -751,6 +754,40 @@ function initGame(account) {
   playIntroCinematic();
   scheduleJadeCupAd();
   saveCurrentGame();
+}
+
+function startCloudSync() {
+  stopCloudSync();
+  if (!authProvider.subscribeAccount || !currentAccount) return;
+
+  cloudSyncUnsubscribe = authProvider.subscribeAccount((remoteAccount) => {
+    applyRemoteAccountState(remoteAccount);
+  });
+}
+
+function stopCloudSync() {
+  if (!cloudSyncUnsubscribe) return;
+  cloudSyncUnsubscribe();
+  cloudSyncUnsubscribe = null;
+}
+
+function applyRemoteAccountState(remoteAccount) {
+  if (!remoteAccount || !currentAccount || remoteAccount.username !== currentAccount.username) return;
+
+  isApplyingRemoteState = true;
+  currentAccount = normalizeAccountRecord({
+    ...currentAccount,
+    ...remoteAccount,
+    password: currentAccount.password,
+  });
+  applyGameState(currentAccount.gameState);
+  renderAchievements();
+  updateWorldSize();
+  resizeCanvas();
+  updateHud();
+  statusText.textContent = `已同步 ${getPlayerNickname()} 的雲端進度。`;
+  scheduleDraw();
+  isApplyingRemoteState = false;
 }
 
 async function ensureTestAccount() {
@@ -994,6 +1031,9 @@ function createLocalAuthProvider(label = "本機儲存模式") {
       accounts[account.username] = account;
       saveAccounts(accounts);
     },
+    subscribeAccount() {
+      return null;
+    },
   };
 }
 
@@ -1004,7 +1044,7 @@ async function createFirebaseAuthProvider(firebaseConfig) {
     import(`https://www.gstatic.com/firebasejs/${FIREBASE_SDK_VERSION}/firebase-firestore.js`),
   ]);
   const { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut } = authModule;
-  const { getFirestore, doc, getDoc, setDoc, serverTimestamp } = firestoreModule;
+  const { getFirestore, doc, getDoc, setDoc, serverTimestamp, onSnapshot } = firestoreModule;
   const app = initializeApp(firebaseConfig);
   const auth = getAuth(app);
   const db = getFirestore(app);
@@ -1068,6 +1108,16 @@ async function createFirebaseAuthProvider(firebaseConfig) {
       const accountToSave = ensureAccountGameData({ ...account, firebaseUid: user.uid }, account.username, "", account.displayName);
       await setDoc(userDocRef(user.uid), toFirestoreAccount(accountToSave), { merge: true });
     },
+    subscribeAccount(callback) {
+      const user = auth.currentUser;
+      if (!user) return null;
+
+      return onSnapshot(userDocRef(user.uid), (snapshot) => {
+        if (!snapshot.exists()) return;
+        const remoteAccount = ensureAccountGameData({ ...snapshot.data(), firebaseUid: user.uid }, snapshot.data().username || user.email || "player", "", snapshot.data().displayName);
+        callback(remoteAccount);
+      });
+    },
     async logout() {
       await signOut(auth);
     },
@@ -1125,6 +1175,7 @@ async function registerAccount(username, password) {
 
 async function logoutAccount() {
   await saveCurrentGame();
+  stopCloudSync();
   if (authProvider.logout) await authProvider.logout();
   currentAccount = null;
   currentNpcProfile = null;
@@ -1145,7 +1196,7 @@ async function logoutAccount() {
 }
 
 async function saveCurrentGame() {
-  if (!currentAccount) return;
+  if (!currentAccount || isApplyingRemoteState) return;
   await ensureAuthProviderReady();
   const account = ensureAccountGameData(currentAccount, currentAccount.username, currentAccount.password, currentAccount.displayName);
   account.displayName = currentAccount.displayName;
